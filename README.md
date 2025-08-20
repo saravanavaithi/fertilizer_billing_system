@@ -1,0 +1,11 @@
+The file fertilizer_billing_system.html represents a complete, standalone web-based billing and inventory management system specifically designed for fertilizer retailers under the title AgriCare Fertilizers. It integrates HTML, CSS, and JavaScript to provide a visually appealing, responsive, and interactive platform that makes day-to-day shop operations easier. The layout is built with a clean, modern design that includes gradient themes, rounded cards, and adaptive grids, ensuring that the system can be used seamlessly on both desktop and mobile devices.
+
+The system is organized into four primary sections: Product Inventory, Billing, SMS Preview, and Order History. The Product Inventory module displays a catalog of fertilizers, each with its price per kilogram and available stock. Products with low stock are visually highlighted to alert the user. Additionally, the shopkeeper can add new products by entering the product name, price, and initial stock, ensuring scalability as new fertilizers are introduced.
+
+The Billing System allows the user to enter customer details, choose products, and specify quantities. Stock automatically updates once items are added to the cart. The system calculates the total bill and displays a cart summary. It also supports multiple payment methods including cash, card, and UPI. For cash payments, it calculates change to be returned; for card payments, it records transaction ID and last four digits of the card; and for UPI, it captures UPI ID, app used, and transaction reference.
+
+Once payment is confirmed, the system generates a Bill & SMS Preview. This is formatted like a professional SMS, summarizing the customer’s details, items purchased, total amount, and payment confirmation. The message can be copied with one click for easy sharing.
+
+Finally, the Order History section stores all past transactions, showing customer names, dates, items purchased, and payment details. Each order provides quick actions to view the SMS bill, copy it, or print a detailed receipt with a professional invoice layout.
+
+Overall, this file delivers a complete digital solution tailored for fertilizer shops. It simplifies inventory tracking, ensures accurate billing, and enhances customer service through clear communication, ultimately supporting smooth and efficient shop management.
