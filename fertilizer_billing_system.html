@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriCare Fertilizers - Billing System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .product-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .stock-low {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .stock-good {
+            color: #27ae60;
+        }
+        
+        .billing-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .cart-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2196F3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-total {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .message-preview {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-line;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #2196F3;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-customer {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .order-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .order-details {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .order-items {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .order-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .payment-status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .payment-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .payment-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .change-highlight {
+            background: linear-gradient(135deg, #FF6B6B, #EE5A24);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 AgriCare Fertilizers</h1>
+            <p>Complete Billing & Inventory Management System</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2>📦 Product Inventory</h2>
+                <button class="btn" onclick="showAddProductForm()" style="margin-bottom: 20px; background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                    ➕ Add New Product
+                </button>
+                
+                <div id="addProductForm" style="display: none; background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #9C27B0;">
+                    <h3 style="margin-bottom: 15px; color: #333;">Add New Product</h3>
+                    <div style="display: grid; gap: 15px;">
+                        <div class="form-group">
+                            <label for="newProductName">Product Name</label>
+                            <input type="text" id="newProductName" placeholder="Enter product name">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newProductPrice">Price per Kg (₹)</label>
+                                <input type="number" id="newProductPrice" min="1" placeholder="Enter price">
+                            </div>
+                            <div class="form-group">
+                                <label for="newProductStock">Initial Stock (kg)</label>
+                                <input type="number" id="newProductStock" min="1" placeholder="Enter stock quantity">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn" onclick="addNewProduct()">Add Product</button>
+                            <button class="btn" onclick="hideAddProductForm()" style="background: linear-gradient(135deg, #757575, #616161);">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-grid" id="productGrid">
+                    <!-- Products will be populated here -->
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🧾 Create Bill</h2>
+                <div class="billing-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" id="customerName" placeholder="Enter customer name">
+                        </div>
+                        <div class="form-group">
+                            <label for="customerMobile">Mobile Number</label>
+                            <input type="tel" id="customerMobile" placeholder="Enter mobile number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productSelect">Select Product</label>
+                            <select id="productSelect">
+                                <option value="">Choose a product...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity (kg)</label>
+                            <input type="number" id="quantity" min="1" placeholder="Enter quantity">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="addToCart()">Add to Cart</button>
+                    
+                    <div id="cartItems"></div>
+                    
+                    <!-- Payment Method Selection -->
+                    <div class="form-group" id="paymentSection" style="display: none;">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod" onchange="handlePaymentMethodChange()">
+                            <option value="">Select payment method...</option>
+                            <option value="cash">💵 Cash</option>
+                            <option value="card">💳 Card (Credit/Debit)</option>
+                            <option value="upi">📱 UPI</option>
+                        </select>
+                        
+                        <!-- Cash Payment Details -->
+                        <div id="cashPayment" style="display: none; margin-top: 15px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cashReceived">Cash Received (₹)</label>
+                                    <input type="number" id="cashReceived" min="0" placeholder="Enter cash received" onchange="calculateChange()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="changeReturn">Change to Return (₹)</label>
+                                    <input type="number" id="changeReturn" readonly style="background: #f0f0f0;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Payment Details -->
+                        <div id="cardPayment" style="display: none; margin-top: 15px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cardType">Card Type</label>
+                                    <select id="cardType">
+                                        <option value="credit">Credit Card</option>
+                                        <option value="debit">Debit Card</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="transactionId">Transaction ID</label>
+                                    <input type="text" id="transactionId" placeholder="Enter transaction ID">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardLast4">Last 4 digits of card</label>
+                                <input type="text" id="cardLast4" maxlength="4" placeholder="XXXX">
+                            </div>
+                        </div>
+                        
+                        <!-- UPI Payment Details -->
+                        <div id="upiPayment" style="display: none; margin-top: 15px;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="upiId">UPI ID</label>
+                                    <input type="text" id="upiId" placeholder="customer@paytm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="upiTransactionId">UPI Transaction ID</label>
+                                    <input type="text" id="upiTransactionId" placeholder="Enter UPI transaction ID">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="upiApp">UPI App Used</label>
+                                <select id="upiApp">
+                                    <option value="paytm">Paytm</option>
+                                    <option value="phonepe">PhonePe</option>
+                                    <option value="googlepay">Google Pay</option>
+                                    <option value="bhim">BHIM</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="generateBill()" style="background: linear-gradient(135deg, #2196F3, #1976D2);">Generate Bill & SMS</button>
+                </div>
+            </div>
+            
+            <div class="section full-width" id="messageSection" style="display: none;">
+                <h2>📱 SMS Message Preview</h2>
+                <div class="message-preview" id="messagePreview"></div>
+                <button class="btn" onclick="copyMessage()">Copy Message</button>
+            </div>
+            
+            <div class="section full-width">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>📋 Order History</h2>
+                    <button class="btn" onclick="toggleOrderHistory()" id="orderToggleBtn">
+                        View Orders (0)
+                    </button>
+                </div>
+                
+                <div id="orderHistoryContainer" style="display: none;">
+                    <div id="orderHistoryList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample fertilizer products data
+        const products = [
+            { id: 1, name: "NPK 10-26-26", pricePerKg: 45, stock: 250 },
+            { id: 2, name: "Urea 46% N", pricePerKg: 35, stock: 180 },
+            { id: 3, name: "DAP (Di-Ammonium Phosphate)", pricePerKg: 55, stock: 320 },
+            { id: 4, name: "Potash (MOP)", pricePerKg: 42, stock: 150 },
+            { id: 5, name: "SSP (Single Super Phosphate)", pricePerKg: 28, stock: 200 },
+            { id: 6, name: "Zinc Sulphate", pricePerKg: 85, stock: 75 },
+            { id: 7, name: "Organic Compost", pricePerKg: 25, stock: 400 },
+            { id: 8, name: "Calcium Nitrate", pricePerKg: 65, stock: 120 }
+        ];
+        
+        let cart = [];
+        let orderHistory = [];
+        
+        function showAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'block';
+        }
+        
+        function hideAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'none';
+            // Clear form
+            document.getElementById('newProductName').value = '';
+            document.getElementById('newProductPrice').value = '';
+            document.getElementById('newProductStock').value = '';
+        }
+        
+        function addNewProduct() {
+            const name = document.getElementById('newProductName').value.trim();
+            const price = parseFloat(document.getElementById('newProductPrice').value);
+            const stock = parseInt(document.getElementById('newProductStock').value);
+            
+            if (!name || !price || !stock) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (price <= 0 || stock <= 0) {
+                alert('Price and stock must be greater than 0');
+                return;
+            }
+            
+            // Check if product name already exists
+            if (products.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+                alert('Product with this name already exists');
+                return;
+            }
+            
+            // Add new product
+            const newId = Math.max(...products.map(p => p.id)) + 1;
+            products.push({
+                id: newId,
+                name: name,
+                pricePerKg: price,
+                stock: stock
+            });
+            
+            // Refresh displays
+            displayProducts();
+            hideAddProductForm();
+            
+            alert(`Product "${name}" added successfully!`);
+        }
+        
+        function handlePaymentMethodChange() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            
+            // Hide all payment details
+            document.getElementById('cashPayment').style.display = 'none';
+            document.getElementById('cardPayment').style.display = 'none';
+            document.getElementById('upiPayment').style.display = 'none';
+            
+            // Show relevant payment details
+            if (paymentMethod === 'cash') {
+                document.getElementById('cashPayment').style.display = 'block';
+            } else if (paymentMethod === 'card') {
+                document.getElementById('cardPayment').style.display = 'block';
+                // Generate random transaction ID for demo
+                document.getElementById('transactionId').value = 'TXN' + Date.now().toString().slice(-8);
+            } else if (paymentMethod === 'upi') {
+                document.getElementById('upiPayment').style.display = 'block';
+                // Generate random UPI transaction ID for demo
+                document.getElementById('upiTransactionId').value = Date.now().toString() + Math.random().toString(36).substr(2, 4).toUpperCase();
+            }
+        }
+        
+        function calculateChange() {
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
+            const change = cashReceived - total;
+            
+            document.getElementById('changeReturn').value = change >= 0 ? change.toFixed(2) : '';
+            
+            // Add visual feedback for change
+            const changeField = document.getElementById('changeReturn');
+            if (change > 0) {
+                changeField.style.background = '#d4edda';
+                changeField.style.color = '#155724';
+            } else if (change < 0) {
+                changeField.style.background = '#f8d7da';
+                changeField.style.color = '#721c24';
+            } else {
+                changeField.style.background = '#f0f0f0';
+                changeField.style.color = '#333';
+            }
+        }
+        
+        function displayProducts() {
+            const grid = document.getElementById('productGrid');
+            const select = document.getElementById('productSelect');
+            
+            grid.innerHTML = '';
+            select.innerHTML = '<option value="">Choose a product...</option>';
+            
+            products.forEach(product => {
+                // Product card
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-details">Price: ₹${product.pricePerKg}/kg</div>
+                    <div class="product-details ${product.stock < 100 ? 'stock-low' : 'stock-good'}">
+                        Stock: ${product.stock} kg ${product.stock < 100 ? '⚠️' : '✅'}
+                    </div>
+                `;
+                grid.appendChild(card);
+                
+                // Select option
+                if (product.stock > 0) {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.textContent = `${product.name} (₹${product.pricePerKg}/kg)`;
+                    select.appendChild(option);
+                }
+            });
+        }
+        
+        function addToCart() {
+            const productId = parseInt(document.getElementById('productSelect').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (!productId || !quantity) {
+                alert('Please select a product and enter quantity');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            
+            if (quantity > product.stock) {
+                alert(`Insufficient stock! Available: ${product.stock} kg`);
+                return;
+            }
+            
+            // Update stock
+            product.stock -= quantity;
+            
+            // Add to cart
+            cart.push({
+                id: productId,
+                name: product.name,
+                pricePerKg: product.pricePerKg,
+                quantity: quantity,
+                total: product.pricePerKg * quantity
+            });
+            
+            // Reset form
+            document.getElementById('productSelect').value = '';
+            document.getElementById('quantity').value = '';
+            
+            updateCartDisplay();
+            displayProducts(); // Refresh product display
+        }
+        
+        function updateCartDisplay() {
+            const cartContainer = document.getElementById('cartItems');
+            cartContainer.innerHTML = '';
+            
+            if (cart.length === 0) return;
+            
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        ${item.quantity} kg × ₹${item.pricePerKg} = ₹${item.total}
+                    </div>
+                    <button onclick="removeFromCart(${index})" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Remove</button>
+                `;
+                cartContainer.appendChild(cartItem);
+            });
+            
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'cart-total';
+            totalDiv.innerHTML = `<h3>Total Amount: ₹${total}</h3>`;
+            cartContainer.appendChild(totalDiv);
+            
+            // Show payment section when cart has items
+            document.getElementById('paymentSection').style.display = cart.length > 0 ? 'block' : 'none';
+        }
+        
+        function removeFromCart(index) {
+            const item = cart[index];
+            const product = products.find(p => p.id === item.id);
+            product.stock += item.quantity; // Restore stock
+            
+            cart.splice(index, 1);
+            updateCartDisplay();
+            displayProducts();
+        }
+        
+        function generateBill() {
+            const customerName = document.getElementById('customerName').value;
+            const customerMobile = document.getElementById('customerMobile').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            
+            if (!customerName || !customerMobile) {
+                alert('Please enter customer name and mobile number');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Please add items to cart');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            // Validate payment details
+            let paymentDetails = {};
+            let paymentValid = true;
+            
+            if (paymentMethod === 'cash') {
+                const cashReceived = parseFloat(document.getElementById('cashReceived').value);
+                const total = cart.reduce((sum, item) => sum + item.total, 0);
+                
+                if (!cashReceived || cashReceived < total) {
+                    alert('Please enter valid cash amount (must be >= total amount)');
+                    return;
+                }
+                
+                paymentDetails = {
+                    method: 'Cash',
+                    cashReceived: cashReceived,
+                    change: cashReceived - total
+                };
+            } else if (paymentMethod === 'card') {
+                const transactionId = document.getElementById('transactionId').value;
+                const cardLast4 = document.getElementById('cardLast4').value;
+                const cardType = document.getElementById('cardType').value;
+                
+                if (!transactionId || !cardLast4 || cardLast4.length !== 4) {
+                    alert('Please enter valid card details');
+                    return;
+                }
+                
+                paymentDetails = {
+                    method: cardType === 'credit' ? 'Credit Card' : 'Debit Card',
+                    transactionId: transactionId,
+                    cardLast4: cardLast4
+                };
+            } else if (paymentMethod === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                const upiTransactionId = document.getElementById('upiTransactionId').value;
+                const upiApp = document.getElementById('upiApp').value;
+                
+                if (!upiId || !upiTransactionId) {
+                    alert('Please enter valid UPI details');
+                    return;
+                }
+                
+                paymentDetails = {
+                    method: 'UPI',
+                    upiId: upiId,
+                    transactionId: upiTransactionId,
+                    app: upiApp.charAt(0).toUpperCase() + upiApp.slice(1)
+                };
+            }
+            
+            const now = new Date();
+            const date = now.toLocaleDateString('en-IN');
+            const time = now.toLocaleTimeString('en-IN');
+            const total = cart.reduce((sum, item) => sum + item.total, 0);
+            
+            let message = `🌱 AgriCare Fertilizers\n`;
+            message += `📄 Bill Summary\n\n`;
+            message += `👤 Customer: ${customerName}\n`;
+            message += `📱 Mobile: ${customerMobile}\n`;
+            message += `📅 Date: ${date}\n`;
+            message += `🕐 Time: ${time}\n\n`;
+            message += `📦 Products:\n`;
+            
+            cart.forEach(item => {
+                message += `• ${item.name}\n`;
+                message += `  ${item.quantity} kg × ₹${item.pricePerKg} = ₹${item.total}\n`;
+            });
+            
+            message += `\n💰 Total Amount: ₹${total}\n`;
+            
+            // Add payment details to message
+            message += `💳 Payment: ${paymentDetails.method}\n`;
+            if (paymentDetails.method === 'Cash') {
+                message += `💵 Cash Received: ₹${paymentDetails.cashReceived}\n`;
+                if (paymentDetails.change > 0) {
+                    message += `🔄 Change Returned: ₹${paymentDetails.change.toFixed(2)}\n`;
+                }
+            } else if (paymentDetails.method.includes('Card')) {
+                message += `🔢 Transaction ID: ${paymentDetails.transactionId}\n`;
+                message += `💳 Card: ****${paymentDetails.cardLast4}\n`;
+            } else if (paymentDetails.method === 'UPI') {
+                message += `📱 UPI ID: ${paymentDetails.upiId}\n`;
+                message += `🔢 Transaction ID: ${paymentDetails.transactionId}\n`;
+                message += `📲 App: ${paymentDetails.app}\n`;
+            }
+            
+            message += `\n✅ Payment Status: COMPLETED\n`;
+            message += `\nThank you for choosing AgriCare Fertilizers!\n`;
+            message += `🌾 Growing prosperity together 🌾`;
+            
+            document.getElementById('messagePreview').textContent = message;
+            document.getElementById('messageSection').style.display = 'block';
+            
+            // Save order to history
+            const orderData = {
+                id: Date.now(),
+                customerName: customerName,
+                customerMobile: customerMobile,
+                items: [...cart],
+                total: total,
+                date: date,
+                time: time,
+                paymentDetails: paymentDetails,
+                smsMessage: message
+            };
+            
+            orderHistory.unshift(orderData); // Add to beginning of array
+            updateOrderHistoryButton();
+            
+            // Clear the cart and form
+            cart = [];
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerMobile').value = '';
+            document.getElementById('paymentMethod').value = '';
+            document.getElementById('paymentSection').style.display = 'none';
+            
+            // Clear payment details
+            document.getElementById('cashReceived').value = '';
+            document.getElementById('changeReturn').value = '';
+            document.getElementById('transactionId').value = '';
+            document.getElementById('cardLast4').value = '';
+            document.getElementById('upiId').value = '';
+            document.getElementById('upiTransactionId').value = '';
+            
+            updateCartDisplay();
+        }
+        
+        function copyMessage() {
+            const messageText = document.getElementById('messagePreview').textContent;
+            navigator.clipboard.writeText(messageText).then(() => {
+                alert('Message copied to clipboard!');
+            });
+        }
+        
+        function updateOrderHistoryButton() {
+            const btn = document.getElementById('orderToggleBtn');
+            btn.textContent = `View Orders (${orderHistory.length})`;
+        }
+        
+        function toggleOrderHistory() {
+            const container = document.getElementById('orderHistoryContainer');
+            const btn = document.getElementById('orderToggleBtn');
+            
+            if (container.style.display === 'none') {
+                displayOrderHistory();
+                container.style.display = 'block';
+                btn.textContent = `Hide Orders (${orderHistory.length})`;
+            } else {
+                container.style.display = 'none';
+                btn.textContent = `View Orders (${orderHistory.length})`;
+            }
+        }
+        
+        function displayOrderHistory() {
+            const container = document.getElementById('orderHistoryList');
+            
+            if (orderHistory.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No orders placed yet</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            orderHistory.forEach((order, index) => {
+                const orderCard = document.createElement('div');
+                orderCard.className = 'order-card';
+                
+                // Payment method icon
+                let paymentIcon = '💵';
+                if (order.paymentDetails.method.includes('Card')) paymentIcon = '💳';
+                else if (order.paymentDetails.method === 'UPI') paymentIcon = '📱';
+                
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <div class="order-customer">${order.customerName}</div>
+                            <div class="order-details">📱 ${order.customerMobile} | 📅 ${order.date} ${order.time}</div>
+                            <div class="order-details">${paymentIcon} ${order.paymentDetails.method} | ✅ COMPLETED</div>
+                        </div>
+                        <div class="order-total">₹${order.total}</div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <strong>Items Purchased:</strong>
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <span>${item.name}</span>
+                                <span>${item.quantity} kg × ₹${item.pricePerKg} = ₹${item.total}</span>
+                            </div>
+                        `).join('')}
+                        
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                            <strong>Payment Details:</strong><br>
+                            ${order.paymentDetails.method === 'Cash' ? 
+                                `💵 Cash: ₹${order.paymentDetails.cashReceived}${order.paymentDetails.change > 0 ? ` | Change: ₹${order.paymentDetails.change.toFixed(2)}` : ''}` :
+                                order.paymentDetails.method.includes('Card') ?
+                                `💳 ${order.paymentDetails.method} ****${order.paymentDetails.cardLast4} | TXN: ${order.paymentDetails.transactionId}` :
+                                `📱 UPI ${order.paymentDetails.app} | ${order.paymentDetails.upiId} | TXN: ${order.paymentDetails.transactionId}`
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-small" onclick="viewOrderSMS(${index})">
+                            📱 View Bill
+                        </button>
+                        <button class="btn btn-small" onclick="copyOrderSMS(${index})" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
+                            📋 Copy Bill
+                        </button>
+                        <button class="btn btn-small" onclick="printBill(${index})" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                            🖨️ Print
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(orderCard);
+            });
+        }
+        
+        function viewOrderSMS(orderIndex) {
+            const order = orderHistory[orderIndex];
+            document.getElementById('messagePreview').textContent = order.smsMessage;
+            document.getElementById('messageSection').style.display = 'block';
+            
+            // Scroll to message section
+            document.getElementById('messageSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function copyOrderSMS(orderIndex) {
+            const order = orderHistory[orderIndex];
+            navigator.clipboard.writeText(order.smsMessage).then(() => {
+                alert(`Bill for ${order.customerName} copied to clipboard!`);
+            });
+        }
+        
+        function printBill(orderIndex) {
+            const order = orderHistory[orderIndex];
+            const printWindow = window.open('', '_blank');
+            
+            const printContent = `
+                <html>
+                <head>
+                    <title>AgriCare Fertilizers - Bill</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+                        .customer-info { margin-bottom: 15px; }
+                        .items { margin-bottom: 15px; }
+                        .item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                        .total { border-top: 2px solid #333; padding-top: 10px; font-weight: bold; font-size: 1.2em; }
+                        .payment-info { margin-top: 15px; background: #f0f0f0; padding: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🌱 AgriCare Fertilizers</h1>
+                        <p>Complete Agricultural Solutions</p>
+                    </div>
+                    
+                    <div class="customer-info">
+                        <strong>Customer:</strong> ${order.customerName}<br>
+                        <strong>Mobile:</strong> ${order.customerMobile}<br>
+                        <strong>Date:</strong> ${order.date} ${order.time}
+                    </div>
+                    
+                    <div class="items">
+                        <h3>Items Purchased:</h3>
+                        ${order.items.map(item => `
+                            <div class="item">
+                                <span>${item.name} (${item.quantity} kg × ₹${item.pricePerKg})</span>
+                                <span>₹${item.total}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="total">
+                        Total Amount: ₹${order.total}
+                    </div>
+                    
+                    <div class="payment-info">
+                        <strong>Payment Details:</strong><br>
+                        Method: ${order.paymentDetails.method}<br>
+                        ${order.paymentDetails.method === 'Cash' ? 
+                            `Cash Received: ₹${order.paymentDetails.cashReceived}${order.paymentDetails.change > 0 ? `<br>Change: ₹${order.paymentDetails.change.toFixed(2)}` : ''}` :
+                            order.paymentDetails.method.includes('Card') ?
+                            `Card: ****${order.paymentDetails.cardLast4}<br>Transaction ID: ${order.paymentDetails.transactionId}` :
+                            `UPI ID: ${order.paymentDetails.upiId}<br>App: ${order.paymentDetails.app}<br>Transaction ID: ${order.paymentDetails.transactionId}`
+                        }<br>
+                        Status: ✅ COMPLETED
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px; font-style: italic;">
+                        Thank you for choosing AgriCare Fertilizers!<br>
+                        🌾 Growing prosperity together 🌾
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // Initialize the application
+        displayProducts();
+    </script>
+</body>
+</html>
